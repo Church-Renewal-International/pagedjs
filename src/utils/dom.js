@@ -480,6 +480,7 @@ export function cloneNode(n, deep=false) {
 }
 
 export function findElement(node, doc, forceQuery) {
+	if (!node || !doc) return;
 	const ref = node.getAttribute("data-ref");
 	return findRef(ref, doc, forceQuery);
 }
