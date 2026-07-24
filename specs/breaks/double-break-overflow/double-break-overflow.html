@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>double-break-overflow</title>
+	<meta charset="UTF-8">
+	<script src="../../../dist/paged.polyfill.js"></script>
+	<style>
+		@page {
+			size: 120mm 80mm;
+			margin: 10mm;
+		}
+
+		.filler {
+			height: 55mm;
+			background: #eee;
+		}
+
+		.break-before-page {
+			break-before: page;
+			background: #fcc;
+		}
+
+		.marker {
+			font-weight: bold;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="filler">Filler content that nearly fills the page.</div>
+	<div class="break-before-page marker" id="target">TARGET: this must appear on page 2</div>
+	<p>Trailing paragraph on page 2.</p>
+</body>
+</html>

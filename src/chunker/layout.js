@@ -128,12 +128,24 @@ class Layout {
 					await this.waitForImages(imgs);
 				}
 
-				newBreakToken = this.findBreakToken(wrapper, source, bounds, prevBreakToken);
+				let previousNode = nodeBefore(node, start);
+				let explicitBreak =
+					needsBreakBefore(node) ||
+					needsPreviousBreakAfter(node) ||
+					needsPageBreak(node, previousNode);
 
-				if (!newBreakToken) {
+				if (explicitBreak) {
+					// Honour CSS break-before/after/page without letting overflow
+					// detection return an earlier break token and skip this node.
 					newBreakToken = this.breakAt(node);
 				} else {
-					this.rebuildTableFromBreakToken(newBreakToken, wrapper);
+					newBreakToken = this.findBreakToken(wrapper, source, bounds, prevBreakToken);
+
+					if (!newBreakToken) {
+						newBreakToken = this.breakAt(node);
+					} else {
+						this.rebuildTableFromBreakToken(newBreakToken, wrapper);
+					}
 				}
 
 				if (newBreakToken && newBreakToken.equals(prevBreakToken)) {
@@ -624,6 +636,15 @@ class Layout {
 					}
 
 					if (!br && !isFloat && isElement(node)) {
+						if (needsBreakBefore(node) && node.dataset.breakBefore !== "avoid") {
+							let prevSibling = nodeBefore(node, rendered);
+							if (prevSibling) {
+								range = document.createRange();
+								range.selectNode(prevSibling);
+								break;
+							}
+						}
+
 						range = document.createRange();
 						range.selectNode(node);
 						break;

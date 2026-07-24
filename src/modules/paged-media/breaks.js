@@ -97,7 +97,10 @@ class Breaks extends Handler {
 						// If we cannot find a node before we should not break!
 						// https://drafts.csswg.org/css-break-3/#break-propagation
 						if (nodeBefore) {
-							if (prop.value === "page" && needsPageBreak(elements[i], nodeBefore)) {
+							if (
+								(prop.value === "page" || prop.value === "always") &&
+								needsPageBreak(elements[i], nodeBefore)
+							) {
 								// we ignore this explicit page break because an implicit page break is already needed
 								continue;
 							}
